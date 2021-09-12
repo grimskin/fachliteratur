@@ -20,14 +20,19 @@ class FbAuthor
     #[ORM\Column(name: 'guid', type: 'string', length: 16)]
     private string $guid;
 
-    #[ORM\Column(name: 'last_item_date', type: 'datetime')]
+    #[ORM\Column(name: 'last_item_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $lastItemDate;
 
-    #[ORM\Column(name: 'last_fetch', type: 'datetime')]
+    #[ORM\Column(name: 'last_fetch', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $lastFetch;
 
     #[ORM\Column(name: 'created_at', type: 'datetime')]
     private \DateTimeInterface $createdAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {

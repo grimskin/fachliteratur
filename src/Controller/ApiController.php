@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\FbAuthor;
 use App\Repository\FbAuthorRepository;
+use App\Service\FlibustaClient;
 use App\View\FbAuthorView;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,10 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiController extends AbstractController
 {
     private FbAuthorRepository $authorRepository;
+    private FlibustaClient $client;
 
-    public function __construct(FbAuthorRepository $authorRepository)
+    public function __construct(FbAuthorRepository $authorRepository, FlibustaClient $client)
     {
         $this->authorRepository = $authorRepository;
+        $this->client = $client;
     }
 
     #[Route('/', name: 'api_root')]
@@ -44,8 +47,16 @@ class ApiController extends AbstractController
     #[Route('/authors/add', name: 'api_fb_authors_add', methods: ['POST'])]
     public function addAuthorAction(Request $request): Response
     {
-        $postData = @json_decode($request->getContent());
+        $postData = @json_decode($request->getContent(), true);
+        $guid = $postData['guid'];
+        if (!$guid) return new JsonResponse([], 500);
 
-        return new JsonResponse($postData);
+        $authorName = $this->client->fetchAuthorName($guid);
+
+        if (!$authorName) return new JsonResponse([], 500);
+
+        $this->authorRepository->addAuthor($guid, $authorName);
+
+        return new JsonResponse(['json' => $authorName]);
     }
 }

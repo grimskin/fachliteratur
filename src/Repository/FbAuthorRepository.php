@@ -31,6 +31,24 @@ class FbAuthorRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    public function addAuthor($guid, $authorName)
+    {
+        $existingRecord = $this->findOneBy(['guid' => $guid]);
+
+        if ($existingRecord) return;
+
+        $record = new FbAuthor();
+        $record->setGuid($guid);
+        $record->setName($authorName);
+
+        try {
+            $this->getEntityManager()->persist($record);
+            $this->getEntityManager()->flush();
+        } catch (\Exception $e) {}
+    }
+
+
     // /**
     //  * @return Author[] Returns an array of Author objects
     //  */
