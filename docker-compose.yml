@@ -19,3 +19,16 @@ services:
         - .:/application
         - ./.docker/php-fpm/php-ini-overrides.ini:/etc/php/8.0/fpm/conf.d/99-overrides.ini
 
+    database:
+      container_name: fachliteratur-database
+      image: mariadb:10.5
+      command: --default-authentication-plugin=mysql_native_password
+      environment:
+        MYSQL_ROOT_PASSWORD: secret
+        MYSQL_DATABASE: symfony_docker
+        MYSQL_USER: symfony
+        MYSQL_PASSWORD: symfony
+      ports:
+        - '4306:3306'
+      volumes:
+        - ./.data:/var/lib/mysql
