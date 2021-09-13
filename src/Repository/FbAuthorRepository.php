@@ -36,7 +36,7 @@ class FbAuthorRepository extends ServiceEntityRepository
     {
         $existingRecord = $this->findOneBy(['guid' => $guid]);
 
-        if ($existingRecord) return;
+        if ($existingRecord) $existingRecord;
 
         $record = new FbAuthor();
         $record->setGuid($guid);
@@ -46,6 +46,8 @@ class FbAuthorRepository extends ServiceEntityRepository
             $this->getEntityManager()->persist($record);
             $this->getEntityManager()->flush();
         } catch (\Exception $e) {}
+
+        return $record;
     }
 
 
