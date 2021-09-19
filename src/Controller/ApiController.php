@@ -70,7 +70,7 @@ class ApiController extends AbstractController
 
         $this->authorRepository->addAuthor($guid, $authorName);
 
-        return new JsonResponse(['json' => $authorName]);
+        return new JsonResponse(['author' => $authorName]);
     }
 
     private function fetchAndGetBooks()
