@@ -32,11 +32,11 @@ class FbAuthorRepository extends ServiceEntityRepository
             ;
     }
 
-    public function addAuthor($guid, $authorName)
+    public function addAuthor($guid, $authorName): FbAuthor
     {
         $existingRecord = $this->findOneBy(['guid' => $guid]);
 
-        if ($existingRecord) $existingRecord;
+        if ($existingRecord) return $existingRecord;
 
         $record = new FbAuthor();
         $record->setGuid($guid);
