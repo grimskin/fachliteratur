@@ -109,8 +109,11 @@ class FbBook
         $guidArr = explode('/', $data['guid']);
         $guid = $guidArr[count($guidArr)-1];
 
+        $description = $data['description'] ?: '';
+        if (!is_string($description)) $description = '';
+
         $result->setName($data['title']);
-        $result->setDescription(strip_tags(trim($data['description'])));
+        $result->setDescription(strip_tags(trim($description)));
         $result->setGuid($guid);
         $result->setPubDate(new \DateTime($data['pubDate']));
 

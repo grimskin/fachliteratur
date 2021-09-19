@@ -123,7 +123,7 @@ class ApiController extends AbstractController
         return new JsonResponse(['last_week' => $lastWeekSerialized, 'pre_week' => $preWeekSerialized]);
     }
 
-    #[Route('/fetch/html', name: 'api_fb_fetch', methods: ['GET'])]
+    #[Route('/fetch/html', name: 'api_fb_fetch_html', methods: ['GET'])]
     public function fetchHtmlAction(Request $request): Response
     {
         $books = $this->fetchAndGetBooks();
