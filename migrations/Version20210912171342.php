@@ -26,7 +26,7 @@ final class Version20210912171342 extends AbstractMigration
                 name VARCHAR(255) NOT NULL, 
                 guid VARCHAR(16) NOT NULL, 
                 last_item_date DATETIME, 
-                last_fetch DATETIME NOT NULL, 
+                last_fetch DATETIME,
                 created_at DATETIME NOT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB
