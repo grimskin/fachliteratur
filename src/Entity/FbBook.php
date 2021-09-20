@@ -109,9 +109,11 @@ class FbBook
         $guidArr = explode('/', $data['guid']);
         $guid = $guidArr[count($guidArr)-1];
 
-        $description = $data['description'] ?: '';
-        if (!is_string($description)) $description = '';
-        if (strlen($description) > 2000) $description = substr($description, 0, 2000) . '...';
+        // Temporary disabled description saving because of issues with Unicode string being too long
+//        $description = $data['description'] ?: '';
+//        if (!is_string($description)) $description = '';
+//        if (strlen($description) > 2000) $description = substr($description, 0, 2000) . '...';
+        $description = '';
 
         $result->setName($data['title']);
         $result->setDescription(strip_tags(trim($description)));
