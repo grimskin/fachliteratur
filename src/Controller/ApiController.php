@@ -73,28 +73,6 @@ class ApiController extends AbstractController
         return new JsonResponse(['author' => $authorName]);
     }
 
-    private function fetchAndGetBooks()
-    {
-        $authors = $this->authorRepository->findAll();
-
-        /** @var FbBook[] $lastWeek */
-        $lastWeek = [];
-        /** @var FbBook[] $preWeek */
-        $preWeek = [];
-
-        foreach ($authors as $author) {
-            $this->manager->fetchByAuthor($author);
-
-            $lastWeek = array_merge($lastWeek, $this->bookRepository->lastWeekByAuthor($author));
-            $preWeek = array_merge($preWeek, $this->bookRepository->preWeekByAuthor($author));
-        }
-
-        return [
-            'last_week' => $lastWeek,
-            'pre_week' => $preWeek,
-        ];
-    }
-
     #[Route('/fetch', name: 'api_fb_fetch', methods: ['GET'])]
     public function fetchAction(Request $request): Response
     {
@@ -118,31 +96,14 @@ class ApiController extends AbstractController
         $preWeekSerialized = array_map(function(FbBook $book) {
             return BookDTO::fromEntity($book);
         }, $preWeek);
+        uasort($preWeekSerialized, function(BookDTO $a, BookDTO $b) {
+            return $b->canonicalDate <=> $a->canonicalDate;
+        });
+
+        // returning only 5 last books
+        $preWeekSerialized = array_slice($preWeekSerialized, 0, 5);
 
 
         return new JsonResponse(['last_week' => $lastWeekSerialized, 'pre_week' => $preWeekSerialized]);
-    }
-
-    #[Route('/fetch/html', name: 'api_fb_fetch_html', methods: ['GET'])]
-    public function fetchHtmlAction(Request $request): Response
-    {
-        $books = $this->fetchAndGetBooks();
-
-        $result = '<html>';
-        $result.= '<h1>Last week</h1>';
-        /** @var FbBook $book */
-        foreach ($books['last_week'] as $book) {
-            $result.= $book->getName();
-            $result.= '<br />';
-        }
-        $result.= '<h1>Before</h1>';
-        /** @var FbBook $book */
-        foreach ($books['pre_week'] as $book) {
-            $result.= $book->getName();
-            $result.= '<br />';
-        }
-        $result.= '</html>';
-
-        return new Response($result);
     }
 }
