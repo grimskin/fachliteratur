@@ -111,6 +111,7 @@ class FbBook
 
         $description = $data['description'] ?: '';
         if (!is_string($description)) $description = '';
+        if (strlen($description) > 2000) $description = substr($description, 0, 2000) . '...';
 
         $result->setName($data['title']);
         $result->setDescription(strip_tags(trim($description)));
